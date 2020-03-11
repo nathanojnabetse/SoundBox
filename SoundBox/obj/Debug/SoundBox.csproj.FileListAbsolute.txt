@@ -1,0 +1,9 @@
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\bin\Debug\SoundBox.exe.config
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\bin\Debug\SoundBox.exe
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\bin\Debug\SoundBox.pdb
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.csprojAssemblyReference.cache
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.Form1.resources
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.Properties.Resources.resources
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.csproj.GenerateResource.cache
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.exe
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.pdb
