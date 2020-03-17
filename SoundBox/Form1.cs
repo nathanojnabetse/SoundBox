@@ -14,9 +14,10 @@ namespace SoundBox
 {
     public partial class Form1 : Form
     {
-        string[] efectosAudio = new string[11];
+        // Array that stores temporarily the paths of audio files that will be saveded to configuration file
         string[] audiosPath = new string[11];
-
+        // Array that contains the paths of previously loaded audio files in the configuration file
+        // this is used every time that a config file is readed/ComboBox changes
 
 
         public Form1()
@@ -26,9 +27,16 @@ namespace SoundBox
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Initial lecture of "PROGRAMAS.txt"-> the file contains a list of the current existing programs in Radio Quántica-EPN
             lecturaArchivos("PROGRAMAS.txt");
         }
 
+        /// <summary>
+        /// Read some .txt file
+        /// Set the initial configuration is the entry paramater is "PROGRAMAS.txt"
+        /// Set the label names of each button of the interface if a config file is readed
+        /// </summary>
+        /// <param name="archivoL">The path of a file</param>
         private void lecturaArchivos(string archivoL)
         {
             // Read each line of the file into a string array. 
@@ -78,10 +86,9 @@ namespace SoundBox
             }
             catch(FileNotFoundException ex)
             {
-                Console.WriteLine("Error: File not Found: "+ex.Message);
-                cleanLabels();
                 // If the file doesn´t exist all label will show ""
-               
+                Console.WriteLine("Error: File not Found: "+ex.Message);
+                cleanLabels();             
             }
             catch(IndexOutOfRangeException ex)
             {
@@ -91,6 +98,9 @@ namespace SoundBox
             }
         }
 
+        /// <summary>
+        /// Clean all the labels in the groupbox called "grpSonidos"
+        /// </summary>
         private void cleanLabels()
         {
             foreach (Control ctr in grpSonidos.Controls)
@@ -103,6 +113,15 @@ namespace SoundBox
             }
         }
 
+        /// <summary>
+        /// Cut paths and search a substring between two strings or characters
+        /// in this case is used to show the name of a file in a path
+        /// the name of a path is between chFrom and chTo
+        /// </summary>
+        /// <param name="lines">Array with the contents of a .txt file</param>
+        /// <param name="chFrom">char or sequence from which the "lines" parameter is cutted</param>
+        /// <param name="chTo">char or sequence to which the "lines" parameter is cutted</param>
+        /// <returns>String array with the sequence required</returns>
         private string[] recortarPaths(string[] lines, string chFrom, string chTo)
         {
             // The contents of a file which stores the path to .wav sounds
@@ -114,7 +133,7 @@ namespace SoundBox
             // Saving all the string between "chFrom" caracter and "chTo" string
             while (i < lines.Length )//&& lines[i].LastIndexOf(chTo) != -1)
             {
-
+                //if the las index os chTo it means that the line is empty
                 if(lines[i].LastIndexOf(chTo)!=-1)
                 {
                     pFrom = lines[i].LastIndexOf(chFrom) + chFrom.Length;
@@ -123,20 +142,24 @@ namespace SoundBox
                 }
                 else
                 {
+                    // If the line is empty it remains that way to be shown,
+                    // is made this way to avoid an exception
                     result[i] = "";
                 }
-               
                 // Console control
                 Console.WriteLine(result[i]);
                 i++;
             }
-
             return result;
         }
 
+        /// <summary>
+        /// The button that saves Configuration
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnGuardarConfig_Click(object sender, EventArgs e)
         {
-            
             //HARDCODE
             Console.WriteLine(cbxProgramas.SelectedItem.ToString());
             string fileName = @"C:\Users\JONA\Desktop\RADIO QUANTICA\"+cbxProgramas.SelectedItem.ToString()+".txt";
@@ -152,19 +175,11 @@ namespace SoundBox
                 {
                     // Add some text to file
                     // The content of the file will be the .wav paths assigned to each button
-                    for(int i=0; i<=efectosAudio.Length; i++)
+                    for(int i=0; i<=audiosPath.Length; i++)
                     {
-                        Byte[] audioAgregado = new UTF8Encoding(true).GetBytes(efectosAudio[i] + "\n");
+                        //The text added are the paths of the .wav files  
+                        Byte[] audioAgregado = new UTF8Encoding(true).GetBytes(audiosPath[i] + "\n");
                         fs.Write(audioAgregado, 0, audioAgregado.Length);
-                    }
-                }
-                // Open the stream and read it back.    
-                using (StreamReader sr = File.OpenText(fileName))
-                {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        Console.WriteLine(s);
                     }
                 }
             }
@@ -177,81 +192,99 @@ namespace SoundBox
             lecturaArchivos("PROGRAMAS.txt");
         }
 
+        /// <summary>
+        /// Button that opens the "PROGRAMAS.txt" file that contains the list of current emiting programs in Radio Quantica-EPN
+        /// to create/delete a program just write/delete the name of the list
+        /// the program file to store the audio config of each program will be created or deleted
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCrearPrograma_Click(object sender, EventArgs e)
         {
             //HARDCODE
+            // The notepad whit the Programs is opened
             Process.Start("notepad.exe", @"C:\Users\JONA\Desktop\RADIO QUANTICA\PROGRAMAS.txt").WaitForExit();
-
+            // The ComboBox is cleaned, to display the real existing programs
             cbxProgramas.Items.Clear();
+            // Programs are shown in the GUI
             lecturaArchivos("PROGRAMAS.txt");
-
+            // The existence or not of a file is examinated
             verificarExistentes();
         }
 
+        /// <summary>
+        /// Verifies the existence or not of a file
+        /// </summary>
         private void verificarExistentes()
         {
-            //Files that Exists
+            //Files that Exists in the folder
             //HARDCODE
             string[] filePaths = Directory.GetFiles(@"C:\Users\JONA\Desktop\RADIO QUANTICA\", "*.txt", SearchOption.TopDirectoryOnly);
-            
+            // Names are cutted to verify the ones that are in the Folder - JUST THE NAMES - to be compared with the ones on the PROGRAMAS.txt 
             filePaths = recortarPaths(filePaths, "\\", ".txt");
-            Console.WriteLine("DOCUMENTOS EXISTENTES");
+            // Console control
+            //Console.WriteLine("***DOCUMENTOS EXISTENTES");
             Array.Sort(filePaths);
             //foreach (string iter in filePaths)
             //{
             //    Console.WriteLine(iter);
             //}
             //**************************************************
-            List<String> existentes = new List<String>();
-            Console.WriteLine("Programas existentes en el archivo de PROGRAMAS");
-
+            //List of existing programs in the PROGRAMAS.txt
+            List <String> existentes = new List<String>();
+            //Console.WriteLine("***Programas existentes en el archivo de PROGRAMAS");
             foreach (string iter in cbxProgramas.Items)
             {
                 existentes.Add(iter);
             }
             existentes.Sort();
-
             //foreach (string iter in existentes)
             //{
             //    Console.WriteLine(iter);
             //}
-            Console.WriteLine("***Los que no existen");
-
-            
+            //Console.WriteLine("***Los que no existen");
             //***********************************
             //HARDCODE
             //CREAR SI NO EXISTE
-            Console.WriteLine("*****PAra ver cual toca crear");
+            //Console.WriteLine("***Para ver cual toca crear");
+            // If a file doesn´t exist, then is created
             foreach (string iter in existentes)
             {
                 if (!File.Exists(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt"))
                 {
-                    Console.WriteLine("no existe, crear: "); Console.WriteLine(iter);
+                    //Console.WriteLine("no existe, crear: "); Console.WriteLine(iter);
                     File.Create(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt").Dispose();
-                    //File.Delete(fileName);
                 }
             }
-            /////
+            //If a program does not Exist in PROGRAMAS.txt, is deleted
             foreach (string iter in filePaths.Except(existentes))
             {
+                // Everything that isnt in the PROGRAMAS file, except for, obviously PROGRMAS.txt
                 if (!iter.Equals("PROGRAMAS"))
                 {
                     try
                     {
-                        Console.WriteLine("Borrar: " + iter);
-                        //meTER EL PATH Y BORRAR EL ARCHIVO ITER
+                        //Console.WriteLine("Borrar: " + iter);
+                        //METER EL PATH Y BORRAR EL ARCHIVO ITER
+                        //HARDCODE
                         File.Delete(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt");
                     }
                     catch(IOException ex)
                     {
+                        // Usually error when the process is being ocupated by something else
+                        // UPDATE: Bug fixed with File.Create().Dispose();
                         Console.WriteLine("Error: " +ex.Message);
                     }
-                    
                 }
-
             }
         }
 
+        /// <summary>
+        /// Open folders and filter for .wav files
+        /// used for every button and seth the path of the .wav sound of each button of the physical interface
+        /// </summary>
+        /// <param name="label">the label that will receive the name</param>
+        /// <param name="index">Index in the audiospath[index] array </param>
         private void abrirArchivos(Label label,int index)
         {
             var fileContent = string.Empty;
@@ -271,23 +304,32 @@ namespace SoundBox
                     //Shows the file name in the button label
                     label.Text = openFileDialog.SafeFileName;
                     //Adds th path to string to be saved
-                    efectosAudio[index]= filePath;
+                    audiosPath[index]= filePath;
                     //Console control
                     Console.WriteLine(filePath);
                 }
             }
         }
 
+        /// <summary>
+        /// ComboBox with the PROGRAMAS.txt content
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbxProgramas_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Set de GUI labels for each button according to the selected option in the ComboBox
             lecturaArchivos(cbxProgramas.SelectedItem.ToString() + ".txt");
+            //HARDCODE
+            // Reads the contents of a .txt file according to the selected option
             audiosPath = System.IO.File.ReadAllLines(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + cbxProgramas.SelectedItem.ToString() + ".txt");
+            // Console Control, to see the paths that are being loaded/saved
+            //foreach(string iter in audiosPath)
+            //{
+            //    Console.WriteLine(iter);
+            //}
 
-            foreach(string iter in audiosPath)
-            {
-                Console.WriteLine(iter);
-            }
-
+            //The following section is to block the save function of the default config
             if (cbxProgramas.SelectedItem.Equals("Predeterminado"))
             {
                 btnGuardarConfig.Enabled = false;
