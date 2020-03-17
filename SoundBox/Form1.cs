@@ -27,6 +27,8 @@ namespace SoundBox
         public delegate void LineReceivedEvent(string line);
         //Object media player to reproduce audios
         MediaPlayer m_mediaPlayer = new MediaPlayer();
+        //Path of the Resource folder in the running instance
+        string FileName = string.Format("{0}Resources\\RQ_Config", Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\")));
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -81,11 +83,11 @@ namespace SoundBox
             try
             {
                 // Console Control
-                Console.WriteLine(Double.Parse(line) / 255.0);
+                //Console.WriteLine(Double.Parse(line) / 255.0);
                 // Conversion used to calibrate de Volume of de track reproduced
                 m_mediaPlayer.Volume = Double.Parse(line) / 255.0;
                 // Volumen is Shown in the GUI
-                lblVolumen.Text = String.Format("{0:00}", m_mediaPlayer.Volume * 100) + " %";
+                lblVolumen.Text = "- - - VOLUMEN: "+ String.Format("{0:00}", m_mediaPlayer.Volume * 100) + " % - - -";
             }
             catch (Exception ex)
             {
@@ -173,8 +175,10 @@ namespace SoundBox
             {
                 //HARDCODE
                 // Lines of the program to be readed
-                string[] lines = System.IO.File.ReadAllLines(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + archivoL);
-
+                //FileName+"\\" + 
+                //@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" +
+                //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" + archivoL);
+                string[] lines = System.IO.File.ReadAllLines(FileName + "\\" + archivoL);
                 // First execution of the program; all contents in "PROGRAMAS.txt" will appear in ComboBox as options to select sounds
                 if (archivoL.Equals("PROGRAMAS.txt"))
                 {
@@ -203,7 +207,7 @@ namespace SoundBox
                         lbl_1.Text = result[0];
                         lbl_2.Text = result[1];
                         lbl_3.Text = result[2];
-                        lbl_4.Text = result[3];
+                        lbl_4.Text = "STOP";//result[3];
                         lbl_5.Text = result[4];
                         lbl_6.Text = result[5];
                         lbl_7.Text = result[6];
@@ -224,6 +228,9 @@ namespace SoundBox
                 // If the file is empty all label will show ""
                 cleanLabels();
                 Console.WriteLine("Archivo de configuración vacio: " + ex.Message);
+                string[] lines = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", };
+                // WriteAllLines creates a file, writes a collection of strings to the file, and then closes the file.
+                System.IO.File.WriteAllLines(FileName+"\\"+cbxProgramas.SelectedItem+".txt", lines);
             }
         }
 
@@ -290,7 +297,10 @@ namespace SoundBox
         {
             //Files that Exists in the folder
             //HARDCODE
-            string[] filePaths = Directory.GetFiles(@"C:\Users\JONA\Desktop\RADIO QUANTICA\", "*.txt", SearchOption.TopDirectoryOnly);
+            //FileName+"\\" + 
+            //@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" +
+            //string[] filePaths = Directory.GetFiles(@"C:\Users\JONA\Desktop\RADIO QUANTICA\", "*.txt", SearchOption.TopDirectoryOnly);
+            string[] filePaths = Directory.GetFiles(FileName + "\\", "*.txt", SearchOption.TopDirectoryOnly);
             // Names are cutted to verify the ones that are in the Folder - JUST THE NAMES - to be compared with the ones on the PROGRAMAS.txt 
             filePaths = recortarPaths(filePaths, "\\", ".txt");
             // Console control
@@ -322,10 +332,16 @@ namespace SoundBox
             foreach (string iter in existentes)
             {
                 //HARDCODE
-                if (!File.Exists(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt"))
+                //FileName+"\\" + 
+                //@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" +
+                //if (!File.Exists(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt"))
+                if (!File.Exists(FileName + "\\" + iter + ".txt"))
                 {
                     //Console.WriteLine("no existe, crear: "); Console.WriteLine(iter);
-                    File.Create(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt").Dispose();
+                    //FileName+"\\" + 
+                    //@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" +
+                    //File.Create(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt").Dispose();
+                    File.Create(FileName + "\\" + iter + ".txt").Dispose();
                 }
             }
             //If a program does not Exist in PROGRAMAS.txt, is deleted
@@ -339,7 +355,10 @@ namespace SoundBox
                         //Console.WriteLine("Borrar: " + iter);
                         //METER EL PATH Y BORRAR EL ARCHIVO ITER
                         //HARDCODE
-                        File.Delete(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt");
+                        //FileName+"\\" + 
+                        //@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" +
+                        //File.Delete(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt");
+                        File.Delete(FileName + "\\" + iter + ".txt");
                     }
                     catch(IOException ex)
                     {
@@ -368,6 +387,7 @@ namespace SoundBox
                 openFileDialog.Filter = "wav files (*.wav)|*.wav";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
+                
                 // When the file explorer is closed the name of the file selected is saved in "efectodAudio" array
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -376,6 +396,14 @@ namespace SoundBox
                     //Shows the file name in the button label
                     label.Text = openFileDialog.SafeFileName;
                     //Adds th path to string to be saved
+                    if (audiosPath.Length == 0)
+                    {
+                        string[] audiosPath = new string[11];
+                        for (int i = 0; i < 11; i++)
+                        {
+                            audiosPath[i] = " ";
+                        }
+                    }
                     audiosPath[index]= filePath;
                     //Console control
                     Console.WriteLine(filePath);
@@ -394,7 +422,13 @@ namespace SoundBox
             lecturaArchivos(cbxProgramas.SelectedItem.ToString() + ".txt");
             //HARDCODE
             // Reads the contents of a .txt file according to the selected option
-            audiosPath = System.IO.File.ReadAllLines(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + cbxProgramas.SelectedItem.ToString() + ".txt");
+            //FileName+"\\" + 
+            //@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" +
+            //audiosPath = System.IO.File.ReadAllLines(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + cbxProgramas.SelectedItem.ToString() + ".txt");
+            audiosPath = System.IO.File.ReadAllLines(FileName + "\\" + cbxProgramas.SelectedItem.ToString() + ".txt");
+            //case for empty or recently created files
+            
+            
             // Console Control, to see the paths that are being loaded/saved
             //foreach(string iter in audiosPath)
             //{
@@ -422,7 +456,10 @@ namespace SoundBox
         {
             //HARDCODE
             Console.WriteLine(cbxProgramas.SelectedItem.ToString());
-            string fileName = @"C:\Users\JONA\Desktop\RADIO QUANTICA\" + cbxProgramas.SelectedItem.ToString() + ".txt";
+            //FileName+"\\" + 
+            //@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" +
+            //string fileName = @"C:\Users\JONA\Desktop\RADIO QUANTICA\" + cbxProgramas.SelectedItem.ToString() + ".txt";
+            string fileName = FileName + "\\" + cbxProgramas.SelectedItem.ToString() + ".txt";
             try
             {
                 // Check if file already exists. If yes, delete it.     
@@ -463,7 +500,10 @@ namespace SoundBox
         {
             //HARDCODE
             // The notepad whit the Programs is opened
-            Process.Start("notepad.exe", @"C:\Users\JONA\Desktop\RADIO QUANTICA\PROGRAMAS.txt").WaitForExit();
+            //FileName+"\\" + 
+            //@"C:\Users\JONA\Desktop\RADIO QUANTICA\\" +
+            //Process.Start("notepad.exe", @"C:\Users\JONA\Desktop\RADIO QUANTICA\PROGRAMAS.txt").WaitForExit();
+            Process.Start("notepad.exe", FileName + "\\PROGRAMAS.txt").WaitForExit();
             // The ComboBox is cleaned, to display the real existing programs
             cbxProgramas.Items.Clear();
             // Programs are shown in the GUI

@@ -97,5 +97,11 @@
   <ItemGroup>
     <None Include="Resources\clipart-led-circle-red-256x256-24bf.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\RQ_Config\Predeterminado.txt" />
+    <Content Include="Resources\RQ_Config\PROGRAMAS.txt" />
+    <Content Include="Resources\RQ_Config\TEST 2.txt" />
+    <Content Include="Resources\RQ_Config\TEST.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

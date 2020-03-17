@@ -1,0 +1,15 @@
+# 			 ---------------------------------------
+#			    *   *   *   PROGRAMAS   *   *   *
+#			 ---------------------------------------
+# Si está agregando un nuevo programa solo escriba el nombre en la siguiente lista
+# No altere el documento ni dañe los programas de sus compañeros
+# Al finalizar no olvide guardar los cambios
+# IMPORTANTE: No borre la configuración de "Predeterminado"
+#	      Mantenga predeterminado como la primera opción
+#	      No deje saltos de línea vacios al final del archivo o entre programas
+#
+#---------------------------------------------------------------------------------------
+Predeterminado
+TEST
+Test2
+#FIN

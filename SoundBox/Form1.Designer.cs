@@ -166,10 +166,10 @@
             // lbl_4
             // 
             this.lbl_4.AutoSize = true;
-            this.lbl_4.Font = new System.Drawing.Font("Microsoft Sans Serif", 5.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_4.Location = new System.Drawing.Point(245, 74);
+            this.lbl_4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_4.Location = new System.Drawing.Point(233, 72);
             this.lbl_4.Name = "lbl_4";
-            this.lbl_4.Size = new System.Drawing.Size(23, 7);
+            this.lbl_4.Size = new System.Drawing.Size(45, 16);
             this.lbl_4.TabIndex = 53;
             this.lbl_4.Text = "STOP";
             // 
