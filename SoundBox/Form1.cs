@@ -5,30 +5,158 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media;
 
 namespace SoundBox
 {
     public partial class Form1 : Form
     {
+        //Creation of the object serial port to read the data from Arduino
+        SerialPort serialPort1 = new SerialPort();
+
         // Array that stores temporarily the paths of audio files that will be saveded to configuration file
         string[] audiosPath = new string[11];
         // Array that contains the paths of previously loaded audio files in the configuration file
         // this is used every time that a config file is readed/ComboBox changes
-
-
-        public Form1()
-        {
-            InitializeComponent();
-        }
+        // Delegate to read lines of COM port
+        public delegate void LineReceivedEvent(string line);
+        //Object media player to reproduce audios
+        MediaPlayer m_mediaPlayer = new MediaPlayer();
 
         private void Form1_Load(object sender, EventArgs e)
         {
             // Initial lecture of "PROGRAMAS.txt"-> the file contains a list of the current existing programs in Radio Quántica-EPN
             lecturaArchivos("PROGRAMAS.txt");
+        }
+
+        public Form1()
+        {
+
+            InitializeComponent();
+            // Ports found in PC
+            string[] ports = SerialPort.GetPortNames();
+            // Console Control
+            //Console.WriteLine("Puertos hallados:");
+            // Adding the ports found to comboBox
+            foreach (string port in ports)
+            {
+                Console.WriteLine(port);
+                serialPort1.PortName = port;
+                cbxPuertoCOM.Items.Add(port);
+            }
+            cbxPuertoCOM.SelectedIndex = 0;
+            //COM port parameters
+            serialPort1.BaudRate = 9600;
+            serialPort1.DtrEnable = true;
+            serialPort1.Open();
+            serialPort1.DataReceived += serialPort1_DataReceived;
+
+        }
+
+        #region Serial Communication
+        /// <summary>
+        /// Lines received in de Serial COM port
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            string line = serialPort1.ReadLine();
+            this.BeginInvoke(new LineReceivedEvent(LineReceived), line);
+        }
+
+
+        /// <summary>
+        /// Lines Received, used to distinguish the button that has been pressed an set de volume
+        /// </summary>
+        /// <param name="line"></param>
+        public void LineReceived(string line)
+        {
+            // System Volume 
+            try
+            {
+                // Console Control
+                Console.WriteLine(Double.Parse(line) / 255.0);
+                // Conversion used to calibrate de Volume of de track reproduced
+                m_mediaPlayer.Volume = Double.Parse(line) / 255.0;
+                // Volumen is Shown in the GUI
+                lblVolumen.Text = String.Format("{0:00}", m_mediaPlayer.Volume * 100) + " %";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            // Detects which button has been pressed
+            #region if else to detect pressed button
+            if (line.Contains("@1"))
+            {
+                reproducirAudio(0);
+            }
+            else if (line.Contains("@2"))
+            {
+                reproducirAudio(1);
+            }
+            else if (line.Contains("@3"))
+            {
+                reproducirAudio(2);
+            }
+            else if (line.Contains("@4"))
+            {
+                m_mediaPlayer.Stop();
+            }
+            else if (line.Contains("@5"))
+            {
+                reproducirAudio(4);
+            }
+            else if (line.Contains("@6"))
+            {
+                reproducirAudio(5);
+            }
+            else if (line.Contains("@7"))
+            {
+                reproducirAudio(6);
+            }
+            else if (line.Contains("@8"))
+            {
+                reproducirAudio(7);
+            }
+            else if (line.Contains("@9"))
+            {
+                reproducirAudio(8);
+            }
+            else if (line.Contains("@A"))
+            {
+                reproducirAudio(9);
+            }
+            else if (line.Contains("@B"))
+            {
+                reproducirAudio(10);
+            }
+            #endregion
+        }
+        #endregion
+
+        /// <summary>
+        /// Reproduce de .wav File
+        /// </summary>
+        /// <param name="index">index of audiosPath Array, that contains the path of the .wav file to be played</param>
+        private void reproducirAudio(int index)
+        {
+            try
+            {
+                m_mediaPlayer.Open(new Uri(Path.GetFullPath(audiosPath[index])));
+                m_mediaPlayer.Play();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("ERROR: " +ex.Message);
+            }
+
         }
 
         /// <summary>
@@ -43,6 +171,7 @@ namespace SoundBox
             // Each element of the array is one line of the file.
             try
             {
+                //HARDCODE
                 // Lines of the program to be readed
                 string[] lines = System.IO.File.ReadAllLines(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + archivoL);
 
@@ -153,64 +282,6 @@ namespace SoundBox
             return result;
         }
 
-        /// <summary>
-        /// The button that saves Configuration
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnGuardarConfig_Click(object sender, EventArgs e)
-        {
-            //HARDCODE
-            Console.WriteLine(cbxProgramas.SelectedItem.ToString());
-            string fileName = @"C:\Users\JONA\Desktop\RADIO QUANTICA\"+cbxProgramas.SelectedItem.ToString()+".txt";
-            try
-            {
-                // Check if file already exists. If yes, delete it.     
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-                // Create a new file     
-                using (FileStream fs = File.Create(fileName))
-                {
-                    // Add some text to file
-                    // The content of the file will be the .wav paths assigned to each button
-                    for(int i=0; i<=audiosPath.Length; i++)
-                    {
-                        //The text added are the paths of the .wav files  
-                        Byte[] audioAgregado = new UTF8Encoding(true).GetBytes(audiosPath[i] + "\n");
-                        fs.Write(audioAgregado, 0, audioAgregado.Length);
-                    }
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
-            }
-
-            cbxProgramas.Items.Clear();
-            lecturaArchivos("PROGRAMAS.txt");
-        }
-
-        /// <summary>
-        /// Button that opens the "PROGRAMAS.txt" file that contains the list of current emiting programs in Radio Quantica-EPN
-        /// to create/delete a program just write/delete the name of the list
-        /// the program file to store the audio config of each program will be created or deleted
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCrearPrograma_Click(object sender, EventArgs e)
-        {
-            //HARDCODE
-            // The notepad whit the Programs is opened
-            Process.Start("notepad.exe", @"C:\Users\JONA\Desktop\RADIO QUANTICA\PROGRAMAS.txt").WaitForExit();
-            // The ComboBox is cleaned, to display the real existing programs
-            cbxProgramas.Items.Clear();
-            // Programs are shown in the GUI
-            lecturaArchivos("PROGRAMAS.txt");
-            // The existence or not of a file is examinated
-            verificarExistentes();
-        }
 
         /// <summary>
         /// Verifies the existence or not of a file
@@ -250,6 +321,7 @@ namespace SoundBox
             // If a file doesn´t exist, then is created
             foreach (string iter in existentes)
             {
+                //HARDCODE
                 if (!File.Exists(@"C:\Users\JONA\Desktop\RADIO QUANTICA\" + iter + ".txt"))
                 {
                     //Console.WriteLine("no existe, crear: "); Console.WriteLine(iter);
@@ -341,6 +413,65 @@ namespace SoundBox
         }
 
         #region Button Events
+        /// <summary>
+        /// The button that saves Configuration
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGuardarConfig_Click(object sender, EventArgs e)
+        {
+            //HARDCODE
+            Console.WriteLine(cbxProgramas.SelectedItem.ToString());
+            string fileName = @"C:\Users\JONA\Desktop\RADIO QUANTICA\" + cbxProgramas.SelectedItem.ToString() + ".txt";
+            try
+            {
+                // Check if file already exists. If yes, delete it.     
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+                // Create a new file     
+                using (FileStream fs = File.Create(fileName))
+                {
+                    // Add some text to file
+                    // The content of the file will be the .wav paths assigned to each button
+                    for (int i = 0; i <= audiosPath.Length; i++)
+                    {
+                        //The text added are the paths of the .wav files  
+                        Byte[] audioAgregado = new UTF8Encoding(true).GetBytes(audiosPath[i] + "\n");
+                        fs.Write(audioAgregado, 0, audioAgregado.Length);
+                    }
+                }
+            }
+            catch (Exception Ex)
+            {
+                Console.WriteLine(Ex.ToString());
+            }
+
+            cbxProgramas.Items.Clear();
+            lecturaArchivos("PROGRAMAS.txt");
+        }
+
+        /// <summary>
+        /// Button that opens the "PROGRAMAS.txt" file that contains the list of current emiting programs in Radio Quantica-EPN
+        /// to create/delete a program just write/delete the name of the list
+        /// the program file to store the audio config of each program will be created or deleted
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCrearPrograma_Click(object sender, EventArgs e)
+        {
+            //HARDCODE
+            // The notepad whit the Programs is opened
+            Process.Start("notepad.exe", @"C:\Users\JONA\Desktop\RADIO QUANTICA\PROGRAMAS.txt").WaitForExit();
+            // The ComboBox is cleaned, to display the real existing programs
+            cbxProgramas.Items.Clear();
+            // Programs are shown in the GUI
+            lecturaArchivos("PROGRAMAS.txt");
+            // The existence or not of a file is examinated
+            verificarExistentes();
+        }
+
         private void btn_1_Click(object sender, EventArgs e)
         {
             abrirArchivos(lbl_1, 0);
@@ -358,7 +489,8 @@ namespace SoundBox
 
         private void btn_4_Click(object sender, EventArgs e)
         {
-            abrirArchivos(lbl_4, 3);
+            m_mediaPlayer.Stop();
+            //abrirArchivos(lbl_4, 3);
         }
 
         private void btn_5_Click(object sender, EventArgs e)

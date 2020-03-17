@@ -7,3 +7,5 @@ C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.Pro
 C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.csproj.GenerateResource.cache
 C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.exe
 C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.pdb
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\bin\Debug\WindowsBase.dll
+C:\Users\JONA\Documents\RADIO QUÁNTICA\SoundBox\SoundBox\obj\Debug\SoundBox.csproj.CopyComplete

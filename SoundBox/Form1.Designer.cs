@@ -54,14 +54,14 @@
             this.btn_1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cbxPuertoCOM = new System.Windows.Forms.ComboBox();
             this.cbxProgramas = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnGuardarConfig = new System.Windows.Forms.Button();
             this.btnCrearPrograma = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
+            this.lblVolumen = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.grpSonidos.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -167,10 +167,11 @@
             // 
             this.lbl_4.AutoSize = true;
             this.lbl_4.Font = new System.Drawing.Font("Microsoft Sans Serif", 5.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_4.Location = new System.Drawing.Point(231, 74);
+            this.lbl_4.Location = new System.Drawing.Point(245, 74);
             this.lbl_4.Name = "lbl_4";
-            this.lbl_4.Size = new System.Drawing.Size(0, 7);
+            this.lbl_4.Size = new System.Drawing.Size(23, 7);
             this.lbl_4.TabIndex = 53;
+            this.lbl_4.Text = "STOP";
             // 
             // lbl_3
             // 
@@ -378,7 +379,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label14);
-            this.groupBox2.Controls.Add(this.comboBox1);
+            this.groupBox2.Controls.Add(this.cbxPuertoCOM);
             this.groupBox2.Controls.Add(this.cbxProgramas);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Location = new System.Drawing.Point(313, 59);
@@ -397,13 +398,13 @@
             this.label14.TabIndex = 30;
             this.label14.Text = "Programa: ";
             // 
-            // comboBox1
+            // cbxPuertoCOM
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(74, 28);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 27;
+            this.cbxPuertoCOM.FormattingEnabled = true;
+            this.cbxPuertoCOM.Location = new System.Drawing.Point(74, 28);
+            this.cbxPuertoCOM.Name = "cbxPuertoCOM";
+            this.cbxPuertoCOM.Size = new System.Drawing.Size(121, 21);
+            this.cbxPuertoCOM.TabIndex = 27;
             // 
             // cbxProgramas
             // 
@@ -464,14 +465,14 @@
             this.label12.TabIndex = 3;
             this.label12.Text = "SoundBox RQ - V1.0";
             // 
-            // label15
+            // lblVolumen
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(350, 27);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(135, 13);
-            this.label15.TabIndex = 5;
-            this.label15.Text = "- - - - Esperando datos - - - -";
+            this.lblVolumen.AutoSize = true;
+            this.lblVolumen.Location = new System.Drawing.Point(350, 27);
+            this.lblVolumen.Name = "lblVolumen";
+            this.lblVolumen.Size = new System.Drawing.Size(135, 13);
+            this.lblVolumen.TabIndex = 5;
+            this.lblVolumen.Text = "- - - - Esperando datos - - - -";
             // 
             // pictureBox1
             // 
@@ -488,7 +489,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(704, 324);
-            this.Controls.Add(this.label15);
+            this.Controls.Add(this.lblVolumen);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.groupBox3);
@@ -537,14 +538,14 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cbxPuertoCOM;
         private System.Windows.Forms.ComboBox cbxProgramas;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btnGuardarConfig;
         private System.Windows.Forms.Button btnCrearPrograma;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label lblVolumen;
     }
 }
 
