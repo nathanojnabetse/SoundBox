@@ -496,6 +496,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.grpSonidos);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "SoundBox RQ";
             this.Load += new System.EventHandler(this.Form1_Load);

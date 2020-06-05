@@ -51,7 +51,7 @@ namespace SoundBox
                 serialPort1.PortName = port;
                 cbxPuertoCOM.Items.Add(port);
             }
-            cbxPuertoCOM.SelectedIndex = 0;
+            //cbxPuertoCOM.SelectedIndex = 0;
             //COM port parameters
             serialPort1.BaudRate = 9600;
             serialPort1.DtrEnable = true;
@@ -144,9 +144,9 @@ namespace SoundBox
         #endregion
 
         /// <summary>
-        /// Reproduce de .wav File
+        /// Reproduce de .wav or .mp3 File
         /// </summary>
-        /// <param name="index">index of audiosPath Array, that contains the path of the .wav file to be played</param>
+        /// <param name="index">index of audiosPath Array, that contains the path of the .wav and .mp3 file to be played</param>
         private void reproducirAudio(int index)
         {
             try
@@ -371,8 +371,8 @@ namespace SoundBox
         }
 
         /// <summary>
-        /// Open folders and filter for .wav files
-        /// used for every button and seth the path of the .wav sound of each button of the physical interface
+        /// Open folders and filter for .wav and .mp3 files
+        /// used for every button and seth the path of the .wav or .mp3 sound of each button of the physical interface
         /// </summary>
         /// <param name="label">the label that will receive the name</param>
         /// <param name="index">Index in the audiospath[index] array </param>
@@ -380,11 +380,11 @@ namespace SoundBox
         {
             var fileContent = string.Empty;
             var filePath = string.Empty;
-            //Filter all the files in a folder just showing the.wav files
+            //Filter all the files in a folder just showing the.wav and .mp3 files
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "wav files (*.wav)|*.wav";
+                openFileDialog.Filter = "Sound files (*.wav;*.mp3)|*.wav;*.mp3";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
                 
@@ -471,10 +471,10 @@ namespace SoundBox
                 using (FileStream fs = File.Create(fileName))
                 {
                     // Add some text to file
-                    // The content of the file will be the .wav paths assigned to each button
+                    // The content of the file will be the .wav and .mp3 paths assigned to each button
                     for (int i = 0; i <= audiosPath.Length; i++)
                     {
-                        //The text added are the paths of the .wav files  
+                        //The text added are the paths of the .wav and .mp3 files  
                         Byte[] audioAgregado = new UTF8Encoding(true).GetBytes(audiosPath[i] + "\n");
                         fs.Write(audioAgregado, 0, audioAgregado.Length);
                     }

@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>SOUNDBOX %282%29.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
@@ -102,6 +105,7 @@
     <Content Include="Resources\RQ_Config\PROGRAMAS.txt" />
     <Content Include="Resources\RQ_Config\TEST 2.txt" />
     <Content Include="Resources\RQ_Config\TEST.txt" />
+    <Content Include="SOUNDBOX %282%29.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
