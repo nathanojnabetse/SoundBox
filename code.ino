@@ -207,3 +207,4 @@ void loop() {
   Serial.print('\n');
 }
   
+//Arduino code & diagram by: Diego Alvarado Egas
